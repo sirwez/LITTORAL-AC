@@ -33,15 +33,13 @@
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 int IR_Recv = 14;   //Receptor Infravermelho (IR)
-int ledVermelho = 12; //Vou retirar depois, só para testes iniciais
-const uint16_t IrLed = 4; //Emissor Infravermelho (IR)
+const uint16_t IrLed = 12; //Emissor Infravermelho (IR)
 
 IRsend irsend(IrLed);
 IRrecv irrecv(IR_Recv);
 decode_results results;
 int num;
-char palavra[16] = "Temperatura:";
-int temperatura;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       //Valores Hexadecimais
+char palavra[16] = "Temperatura:";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     //Valores Hexadecimais
 //Raw responsavel por cada sinal enviado do emissor IR ao A/C
 uint16_t powerOffRawData[199] = {4370, 4374,  512, 1662,  512, 576,  514, 1684,  488, 1660,  514, 576,  514, 576,  514, 1684,  488, 580,  538, 548,  514, 1660,  512, 576,  514, 576,  514, 1660,  514, 1658,  514, 576,  514, 1660,  540, 548,  514, 1662,  512, 1684,  488, 1660,  512, 1658,  514, 576,  514, 1658,  514, 1662,  536, 1634,  510, 576,  514, 576,  514, 576,  514, 576,  514, 1684,  490, 576,  514, 578,  538, 1634,  512, 1660,  512, 1662,  510, 576,  514, 576,  514, 576,  514, 576,  514, 578,  540, 548,  514, 576,  514, 574,  514, 1658,  514, 1658,  516, 1658,  514, 1660,  512, 1658,  540, 5194,  4372, 4352,  514, 1660,  512, 576,  514, 1660,  514, 1660,  510, 576,  514, 576,  514, 1660,  512, 578,  538, 550,  514, 1660,  512, 576,  514, 576,  514, 1660,  512, 1684,  490, 574,  514, 1660,  538, 550,  514, 1660,  512, 1660,  512, 1658,  514, 1684,  488, 574,  514, 1660,  512, 1660,  538, 1632,  512, 576,  514, 576,  514, 576,  514, 576,  514, 1660,  512, 576,  514, 578,  538, 1656,  488, 1660,  512, 1684,  488, 576,  514, 576,  514, 576,  514, 578,  512, 578,  538, 550,  514, 576,  514, 576,  514, 1660,  512, 1684,  488, 1660,  512, 1660,  512, 1662,  536};  // COOLIX B27BE0
 uint16_t powerOnRawData[199] =  {4372, 4350,  514, 1660,  512, 576,  514, 1658,  514, 1658,  514, 576,  514, 576,  514, 1658,  514, 578,  518, 570,  512, 1684,  490, 574,  514, 576,  514, 1658,  512, 1684,  490, 576,  514, 1660,  538, 550,  514, 576,  514, 576,  514, 1660,  512, 1660,  512, 1682,  490, 1682,  488, 1662,  538, 1632,  512, 1662,  510, 1684,  490, 576,  514, 576,  514, 576,  514, 576,  514, 578,  538, 550,  512, 1662,  512, 1684,  488, 1662,  510, 1660,  512, 576,  514, 576,  514, 576,  538, 1632,  514, 576,  514, 576,  514, 576,  514, 576,  514, 1660,  512, 1662,  510, 1658,  540, 5190,  4374, 4352,  514, 1658,  512, 576,  514, 1658,  514, 1660,  514, 574,  514, 576,  514, 1684,  488, 578,  530, 558,  514, 1658,  512, 576,  514, 576,  516, 1658,  514, 1660,  512, 576,  514, 1662,  536, 550,  514, 576,  514, 576,  514, 1684,  488, 1658,  514, 1660,  514, 1656,  514, 1662,  536, 1634,  512, 1660,  512, 1658,  512, 576,  514, 574,  514, 576,  514, 574,  514, 578,  538, 550,  514, 1660,  510, 1684,  490, 1658,  514, 1660,  514, 576,  514, 576,  514, 578,  516, 1680,  490, 576,  512, 578,  514, 576,  514, 576,  514, 1660,  512, 1682,  490, 1660,  540};  // COOLIX B21F78
@@ -65,7 +63,6 @@ case 0:
   irsend.sendRaw(powerOffRawData, 199, 38);
   delay(5000);
   lcd.clear();
-  temperatura = num;
   char desligar[14]= "Desligando...";
   lcd.clear();
     for(int i = 0; i < 13; i++ ){
@@ -74,13 +71,14 @@ case 0:
     lcd.print(desligar[i]);
     
   }
+  lcd.clear();
   break;
 }
   case 1:
   {
   irsend.sendRaw(powerOnRawData, 199, 38);
   delay(5000);
-  temperatura = 22;
+  char temp22[10] = {"VinteDois"};
   lcd.clear();
     for(int i = 0; i < 12; i++ ){
     
@@ -88,16 +86,17 @@ case 0:
     lcd.print(palavra[i]);
     
   }
-    lcd.print(temperatura);
-    lcd.print("º");
-    
+  for(int j=0; j<10;j++){
+  lcd.setCursor(j, 1);
+    lcd.print(temp22[j]);
+  }
   break;
   }
   case 17:
   {
   irsend.sendRaw(set17RawData, 199, 38);
   delay(5000);
-  temperatura = num;
+  char temp17[10] = {"Dezessete"};
   lcd.clear();
     for(int i = 0; i < 12; i++ ){
     
@@ -105,15 +104,18 @@ case 0:
     lcd.print(palavra[i]);
     
   }
-    lcd.print(temperatura);
-    lcd.print("º");
+  for(int j=0; j<10;j++){
+  lcd.setCursor(j, 1);
+    lcd.print(temp17[j]);
+  }
   break;
   }
+  
   case 18:
   {
   irsend.sendRaw(set18RawData, 199, 38);
   delay(5000);
-  temperatura = num;
+  char temp18[8] = {"Dezoito"};
   lcd.clear();
     for(int i = 0; i < 12; i++ ){
     
@@ -121,16 +123,17 @@ case 0:
     lcd.print(palavra[i]);
     
   }
-    lcd.print(temperatura);
-    lcd.print("º");
-    
+  for(int j=0; j<9;j++){
+  lcd.setCursor(j, 1);
+    lcd.print(temp18[j]);
+  }
   break;
   }
   case 19:
   {
   irsend.sendRaw(set19RawData, 199, 38);
   delay(5000);
-  temperatura = num;
+  char temp19[9] = {"Dezenove"};
   lcd.clear();
     for(int i = 0; i < 12; i++ ){
     
@@ -138,15 +141,17 @@ case 0:
     lcd.print(palavra[i]);
     
   }
-    lcd.print(temperatura);
-    lcd.print("º");
+  for(int j=0; j<9;j++){
+  lcd.setCursor(j, 1);
+    lcd.print(temp19[j]);
+  }
   break;
   }
   case 20:
   {
   irsend.sendRaw(set20RawData, 199, 38);
   delay(5000);
-  temperatura = num;
+  char temp20[6] = {"Vinte"};
   lcd.clear();
     for(int i = 0; i < 12; i++ ){
     
@@ -154,15 +159,17 @@ case 0:
     lcd.print(palavra[i]);
     
   }
-    lcd.print(temperatura);
-    lcd.print("º");
+  for(int j=0; j<5;j++){
+  lcd.setCursor(j, 1);
+    lcd.print(temp20[j]);
+  }
   break;
   }
   case 21:
   {
   irsend.sendRaw(set21RawData, 199, 38);
   delay(5000);
-  temperatura = num;
+  char temp21[10] = {"VinteUm"};
   lcd.clear();
     for(int i = 0; i < 12; i++ ){
     
@@ -170,15 +177,17 @@ case 0:
     lcd.print(palavra[i]);
     
   }
-    lcd.print(temperatura);
-    lcd.print("º");
+  for(int j=0; j<8;j++){
+  lcd.setCursor(j, 1);
+    lcd.print(temp21[j]);
+  }
   break;
   }
   case 22:
   {
   irsend.sendRaw(set22RawData, 199, 38);
   delay(5000);
-  temperatura = num;
+  char temp222[10] = {"VinteDois"};
   lcd.clear();
     for(int i = 0; i < 12; i++ ){
     
@@ -186,15 +195,17 @@ case 0:
     lcd.print(palavra[i]);
     
   }
-    lcd.print(temperatura);
-    lcd.print("º");
+  for(int j=0; j<10;j++){
+  lcd.setCursor(j, 1);
+    lcd.print(temp222[j]);
+  }
   break;
   }
   case 23:
   {
   irsend.sendRaw(set23RawData, 199, 38);
   delay(5000);
-  temperatura = num;
+  char temp23[10] = {"VinteTres"};
   lcd.clear();
     for(int i = 0; i < 12; i++ ){
     
@@ -202,15 +213,17 @@ case 0:
     lcd.print(palavra[i]);
     
   }
-    lcd.print(temperatura);
-    lcd.print("º");
+  for(int j=0; j<10;j++){
+  lcd.setCursor(j, 1);
+    lcd.print(temp23[j]);
+  }
   break;
   }
   case 24:
   {
   irsend.sendRaw(set24RawData, 199, 38);
   delay(5000);
-  temperatura = num;
+  char temp24[12] = {"VinteQuatro"};
   lcd.clear();
     for(int i = 0; i < 12; i++ ){
     
@@ -218,15 +231,17 @@ case 0:
     lcd.print(palavra[i]);
     
   }
-    lcd.print(temperatura);
-    lcd.print("º");
+  for(int j=0; j<12;j++){
+  lcd.setCursor(j, 1);
+    lcd.print(temp24[j]);
+  }
   break;
   }
   case 25:
   {
   irsend.sendRaw(set25RawData, 199, 38);
   delay(5000);
-  temperatura = num;
+  char temp25[11] = {"VinteCinco"};
   lcd.clear();
     for(int i = 0; i < 12; i++ ){
     
@@ -234,9 +249,21 @@ case 0:
     lcd.print(palavra[i]);
     
   }
-    lcd.print(temperatura);
-    lcd.print("º");
+  for(int j=0; j<10;j++){
+  lcd.setCursor(j, 1);
+    lcd.print(temp25[j]);
+  }
   break;
+  }
+  default:
+  {
+    lcd.clear();
+    char erro[10]={"Error 404"};
+    for(int i = 0; i < 10; i++ ){
+    
+    lcd.setCursor(i, 0);
+    lcd.print(erro[i]);
+    }   
   }
     }
     
@@ -250,7 +277,6 @@ void setup(){
   lcd.init();
   lcd.backlight();
 //Blynk.begin (auth, ssid, pass);
-  pinMode(ledVermelho, OUTPUT); // configuramos o pino digital como saída
   
 }
  
@@ -261,119 +287,121 @@ void loop(){
     switch (results.value){ //SWITCH CASE para usar o botão pressionado do controle remoto
      
 
-case 551520375: //ligar
+case 16720605: //ligar (seta esquerda)
        {
+
         num=0;
         setValor(num);
-        digitalWrite(ledVermelho, HIGH);
+
         break;
        }
        
 
-case 551520375: //desligar
+case 16761405: //desligar (seta direita)
        {
+        
         num=1;
         setValor(num);
-        digitalWrite(ledVermelho, HIGH);
+
         break;
        }
        
 
-case 551520375: //17
+case 16738455: //17
        {
         num=17;
         setValor(num);
-        digitalWrite(ledVermelho, HIGH);
+
         break;
        }
        
 
-case 551520375: //18
+case 16750695: //18
        {
         num=18;
         setValor(num);
-        digitalWrite(ledVermelho, HIGH);
+
         break;
        }
        
 
-case 551520375: //19
+case 16756815: //19
        {
         num=19;
         setValor(num);
-        digitalWrite(ledVermelho, HIGH);
+
         break;
        }
        
  
-case 551520375: //20
+case 16724175: //20
        {
         num=20;
         setValor(num);
-        digitalWrite(ledVermelho, HIGH);
+
         break;
        }
        
 
-case 551520375: //21
+case 16718055: //21
        {
         num=21;
         setValor(num);
-        digitalWrite(ledVermelho, HIGH);
+
         break;
        }
        
 
-case 551520375: //22
+case 16743045: //22
        {
         num=22;
         setValor(num);
-        digitalWrite(ledVermelho, HIGH);
+
         break;
        }
        
 
-case 551520375: //23
+case 16716015: //23
        {
         num=23;
         setValor(num);
-        digitalWrite(ledVermelho, HIGH);
+
         break;
        }
        
    
-case 551520375: //24
+case 16726215: //24
        {
         num=24;
         setValor(num);
-        digitalWrite(ledVermelho, HIGH);
+
         break;
        }
        
        
-case 551520375: //25
+case 16734885: //25
        {
         num=25;
         setValor(num);
-        digitalWrite(ledVermelho, HIGH);
+
         break;
        }
        
  
-case 551520375: //seta pra cima
+case 16736925: //seta pra cima
        {
         num=num+1;
         setValor(num);
-        digitalWrite(ledVermelho, HIGH);
+
         break;
        }
        
   
-case 551520375: //seta pra baixo
+case 16754775: //seta pra baixo
        {
         num=num-1;
         setValor(num);
-        digitalWrite(ledVermelho, HIGH);
+        
         break;
        }
         
