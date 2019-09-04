@@ -290,7 +290,7 @@ void loop(){
 case 16720605: //ligar (seta esquerda)
        {
 
-        num=0;
+        num=1;
         setValor(num);
 
         break;
@@ -300,7 +300,7 @@ case 16720605: //ligar (seta esquerda)
 case 16761405: //desligar (seta direita)
        {
         
-        num=1;
+        num=0;
         setValor(num);
 
         break;
