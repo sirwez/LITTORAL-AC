@@ -1,23 +1,20 @@
-/**
- * Displays text sent over the serial port (e.g. from the Serial Monitor) on
- * an attached LCD.
- */
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 
-// Set the LCD address to 0x27 for a 16 chars and 2 line display
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 void setup()
 {
 	int i = 0;
-  char palavra[16] = "Gabriel        ";
+  
+  char palavra[16] = "Temperatura";
+  int temperatura = 11;
 	lcd.begin(16,2);
   lcd.init();
   lcd.backlight();
   for(i = 0; i < 16; i++ ){
     lcd.setCursor(i, 0);
-    lcd.print(palavra[i]);  
+    lcd.print(palavra[i], temperatura);  
   } 
 	// Initialize the serial port at a speed of 9600 baud
 	Serial.begin(9600);
