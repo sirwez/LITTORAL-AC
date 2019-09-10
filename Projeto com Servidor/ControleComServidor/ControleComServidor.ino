@@ -178,7 +178,7 @@
    
    if (!client.connect(host, port))    {    //Envioda temperatura atual
       Serial.println("Falha...");
-      return;
+      return ;
     }else{
       client.println(" ");
       client.println("Disnel");
@@ -188,5 +188,5 @@
       client.println("fim"); 
     }
    }
-  delay(100);
+  delay(2000);
   }
